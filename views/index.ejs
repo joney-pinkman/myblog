@@ -1,0 +1,22 @@
+<% include /module/header %>
+<% include /module/navbar %>
+<div class="h3 text-center">
+	this is home page
+	<% if(docs){ %>
+	<div class="row">
+		<% docs.forEach(function(item,index){ %>
+		<div class="col-md-4">
+            <h2><%-item.title %></h2><small><%-item.name %></small>
+            <p><%-item.post %></p>
+            <p><span><%=item.time.minute %></span>
+            <a class="btn btn-default" href="<%='/u/'+item.name+'/' + item.time.day + '/'+item.title %>" role="button">View details »</a></p>
+		</div>
+		<% }) %>
+	</div>
+	<% }else{ %>
+	<h4>no blog in this server.</h4>
+	<% } %>
+	
+	
+</div>
+<% include /module/footer %>

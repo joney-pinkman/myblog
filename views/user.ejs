@@ -1,0 +1,16 @@
+<% include /module/header %>
+<% include /module/navbar %>
+<div class="row">
+	<% if(doc){ %>
+	
+	<p class="page-header">
+	<%= doc.title %>
+  	作者：<a href="/u/<%= doc.name %>"><%= doc.name %></a> | 
+ 	 日期：<%= doc.time.minute %>
+	</p>
+	<p><%- doc.post %></p>
+	
+	<% } %>
+</div>
+<% include comment %>
+<% include /module/footer %>

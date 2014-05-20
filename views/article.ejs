@@ -1,0 +1,14 @@
+<% include /module/header %>
+<% include /module/navbar %>
+<% if(doc){ %>
+<div class="jumbotron">
+	<h1><%=doc.title %></h1>
+	<p class="lead"><% =doc.name %> <% =doc.time.minute %></p>
+	<p>
+		<%=doc.post  %>
+	</p>
+	<button class="btn btn-default">编辑</button>
+	<button class="btn btn-default">删除</button>
+</div>
+<% } %>
+<% include /module/footer %>

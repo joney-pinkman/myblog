@@ -1,0 +1,55 @@
+<% if(comments){ %>
+<ul class="media-list">
+	<% comments.forEach(function(item,index){ %>
+  <li class="media">
+    <a class="pull-left" href="#">
+      <span><%=item.userName %></span>
+      <span><%=item.time%></span>
+    </a>
+    <div class="media-body">
+      <span class="media-heading h4"><%=item.content %></span>
+      <% if(item.userName != user.name){ %>
+	  <button class="btn btn-primary reply" type="button">reply</button>
+	  
+	  
+	  <% } %>
+	  
+	 
+		
+	</div>
+  </li>
+  <% }) %>
+</ul>
+ <div id="replyForm" style="display:none;">
+	  <input id="replyInput" class="form-control" style="width:80%;display:inline;" type="text">
+	  <button id="replySure" type="button" class="btn btn-danger">确认</button>
+	  </div>
+	  <script>
+	  $(function(){
+		  $('#replySure').on('click',function(){
+			  
+		  });
+		  $('.reply').click(function(){
+			  console.log($(this).next());
+			  if($(this).next().get(0) ==  $('#replyForm').get(0) && $('#replyForm').is(':visible')){
+				  $('#replyForm').hide();
+			  }else{
+				  $('#replyForm').insertAfter($(this)).show();
+			  }
+			  
+			  
+		  })
+		  
+	  })
+	  
+	  </script>
+<% } %>
+<form role="form" method="post">
+  
+  <div class="form-group">
+	<textarea class="form-control" rows="3" name="content"></textarea>
+  </div>
+  <input type="hidden" name="blogID" value="<%=doc._id%>">
+  
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>

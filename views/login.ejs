@@ -1,0 +1,26 @@
+<% include /module/header %>
+<% include /module/navbar %>
+<% if(!user){ %>
+<form class="form-signin" role="form" method="post">
+	<h2 class="form-signin-heading">Please sign in</h2>
+	<input name="name" type="text" class="form-control" placeholder="Email address"
+		required="" autofocus=""> 
+	<input name="password" type="password"
+		class="form-control" placeholder="Password" required=""> <label
+		class="checkbox"> <input type="checkbox" value="remember-me">
+		Remember me
+	</label>
+	<% if(error){ %>
+	<div class="alert alert-danger">
+		<strong><%=error %></strong>
+	</div>
+	<% } %>
+	<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
+		in</button>
+</form>
+<% }else{ %>
+<div class="row">
+	<h3 class="text-center"><%=success%></h3>
+</div>
+<% } %>
+<% include /module/footer %>
