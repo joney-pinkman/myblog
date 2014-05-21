@@ -1,17 +1,49 @@
 <% if(comments){ %>
 <ul class="media-list">
 	<% comments.forEach(function(item,index){ %>
-  <li class="media">
+ 	<li class="media">
     <a class="pull-left" href="#">
       <span><%=item.userName %></span>
       <span><%=item.time%></span>
     </a>
     <div class="media-body">
       <span class="media-heading h4"><%=item.content %></span>
+      <% if(item.child.length){ %> 
+      <ul class="media-list">
+          <% item.child.forEach(function(itemC,index){ %>
+		 	<li class="media">
+		    <a class="pull-left" href="#">
+		      <span><%=itemC.userName %></span>
+		      <span><%=itemC.time%></span>
+		    </a>
+		    <div class="media-body">
+		      <span class="media-heading h4"><%=itemC.content %></span>
+		      
+		      <% if(itemC.userName != user.name){ %>
+			  <button class="btn btn-primary reply" type="button">reply</button>
+			  <form>
+			  <input type="hidden" name="replyID" value="<%=itemC._id%>">
+			  <input type="hidden" name="replyName" value="<%=itemC.userName%>">
+			  <input name="blogID" type="hidden" value="<%=doc._id%>">
+			  
+			  </form>
+			  <% } %>
+			  
+			 
+				
+			</div>
+		  </li>
+		  <% }) %>
+	  </ul>
+      <% } %>
       <% if(item.userName != user.name){ %>
 	  <button class="btn btn-primary reply" type="button">reply</button>
+	  <form>
+	  <input type="hidden" name="replyID" value="<%=item._id%>">
+	  <input type="hidden" name="replyName" value="<%=item.userName%>">
+	  <input name="blogID" type="hidden" value="<%=doc._id%>">
 	  
-	  
+	  </form>
 	  <% } %>
 	  
 	 
@@ -20,6 +52,7 @@
   </li>
   <% }) %>
 </ul>
+
  <div id="replyForm" style="display:none;">
 	  <input id="replyInput" class="form-control" style="width:80%;display:inline;" type="text">
 	  <button id="replySure" type="button" class="btn btn-danger">确认</button>
@@ -27,6 +60,17 @@
 	  <script>
 	  $(function(){
 		  $('#replySure').on('click',function(){
+			  var content = $('#replyInput').val();
+			  var $form = $('#replyForm').next('form');
+			  var data =  {}
+			  $form.serializeArray().forEach(function(item,index){
+				  data[item.name] = item.value;
+			  })
+			  data.content = $('#replyInput').val();
+			  
+			  $.ajax({url:location.pathname+'/reply',data:data,type:'post',dataType:'json'}).done(function(json){
+				  
+			  })
 			  
 		  });
 		  $('.reply').click(function(){

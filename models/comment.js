@@ -1,7 +1,6 @@
 var mongodb = require('./db');
-
+var ObjectID = require('mongodb').ObjectID;
 function Comment(obj){
-	
 	this.userName = obj.userName;
 	this.blogID = obj.blogID;
 	this.content = obj.content;
@@ -16,7 +15,6 @@ module.exports = Comment;
 
 Comment.prototype.save = function(callback){
 	var comment = {
-			
 			userName:this.userName,
 			blogID :this.blogID,
 			content:this.content,
@@ -25,7 +23,7 @@ Comment.prototype.save = function(callback){
 			recallID :this.recallID,
 			timeStamp:this.timeStamp
 	};
-	
+	console.log('comment',comment);
 	mongodb.open(function(err,db){
 		if(err){
 			return callback(err);
@@ -38,27 +36,30 @@ Comment.prototype.save = function(callback){
 			}
 			collection.insert(comment,{
 				safe:true
-			},function(err,comment){
-				console.log('save ',comment);
-				mongodb.close();
+			},function(err,cmt){
+				
 				if(err){
 					return callback(err);
 				}
 				if(!comment.replyID){
-					return callback(null,comment);
+					mongodb.close();
+					return callback(null,cmt);
 				}
+				
 				collection.findOne({
-					'_id':comment.replyID
+					'_id':new ObjectID(comment.replyID)
 				},function(err,cmtTmp){
 					if(err){
 						return callback(err);
 					}
+					console.log('cmtTmp',cmtTmp);
 					cmtTmp.recallID.push(comment._id);
-					collection.update({'_id':comment.replyID},{$set:{'recallID':cmtTmp.recallID}},function(err){
+					collection.update({'_id':new ObjectID(comment.replyID)},{$set:{'recallID':cmtTmp.recallID}},function(err){
+						mongodb.close();
 						if(err){
 							return callback(err);
 						}
-						callback(null,comment);
+						callback(null,cmt);
 					})
 				});
 			
@@ -81,7 +82,6 @@ Comment.getAll = function(blogID,callback){
 			collection.find({
 				blogID:blogID.toString()
 			}).sort({blogID:-1}).toArray(function(err,comments){
-				console.log('getall',comments,'blogID',blogID);
 				mongodb.close();
 				if(err){
 					return callback(err);
@@ -90,8 +90,8 @@ Comment.getAll = function(blogID,callback){
 				function search(_id){
 					
 					for(var i=0;i<comments.length;i++){
-						if(comments[i]._id ==_id){
-							return comments[i]._id;
+						if(comments[i]._id.toString() ==_id){
+							return comments[i];
 						}
 					}
 					
@@ -100,10 +100,11 @@ Comment.getAll = function(blogID,callback){
 				
 				function foo(tree,arrID){
 					tree.child = [];
-					
+					console.log('arrID',arrID[0]);
 					var tmp ;
 					arrID.forEach(function(item,index){
 						tmp = search(item);
+						console.log('tmp',tmp);
 						if(tmp.recallID.length){
 							foo(tmp,tmp.recallID);
 						}
@@ -114,9 +115,10 @@ Comment.getAll = function(blogID,callback){
 					return item.replyID.length ==0;
 				});
 				cmtFinal.forEach(function(item,index){
+					
 					foo(item,item.recallID);
 				});
-				
+				console.log(cmtFinal);
 				
 				callback(null,cmtFinal);
 			});

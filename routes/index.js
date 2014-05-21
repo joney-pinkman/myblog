@@ -27,7 +27,7 @@ module.exports = function(app) {
 	app.get('/', function(req, res) {
 		
 		if(req.session.user){
-			Post.getAll(req.session.user.name,function(err,docs){
+			Post.getAll('',function(err,docs){
 				if(err){
 					req.flash('error',err);
 					docs = [];
@@ -126,8 +126,25 @@ module.exports = function(app) {
 						req.flash('error', err); 
 						return res.redirect('/');
 					} 
-					console.log('comment',comments,'doc_id',doc._id);
+
 					var date = new Date();
+					function handle(arr){
+						arr.forEach(function(item,index){
+							if(item.timeStamp){
+								date.setTime(item.timeStamp);
+								item.time =  date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + 
+							      date.getHours() + ":" + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+
+							}else{
+								item.time = '';
+							}
+							if(item.child.length){
+								item.child = handle(item.child);
+							}
+						});
+						
+					}
+					
 					comments.forEach(function(item,index){
 						if(item.timeStamp){
 							date.setTime(item.timeStamp);
@@ -138,7 +155,7 @@ module.exports = function(app) {
 							item.time = '';
 						}
 						
-					})
+					});
 					res.render('user', {
 						title: user.name,
 
@@ -155,6 +172,24 @@ module.exports = function(app) {
 			});
 		});
 	});
+	app.post('/u/:name/:day/:title/reply',function(req,res){
+		var comment = new Comment({
+			userName:req.session.user.name,
+			replyID:req.body.replyID,
+			replyName:req.body.replyName,
+			blogID:req.body.blogID,
+			content:req.body.content
+			
+		});
+		comment.save(function(err){
+			if (err) {
+				req.flash('error', err); 
+				
+			} 
+			var url = '/u/'+req.params.name+'/'+req.params.day+'/'+req.params.title; 
+			res.redirect(url);
+		})
+	});
 	
 	app.post('/u/:name/:day/:title',function(req,res){
 		
@@ -170,11 +205,12 @@ module.exports = function(app) {
 			req.flash('error','you can not comment your blog');
 			return res.redirect(req.originalUrl);
 		}
-		
+
 		var comment = new Comment({
+			userID:req.session.user._id,
 			userName:req.session.user.name,
 			blogID:req.body.blogID,
-			content:req.body.content,
+			content:req.body.content
 			
 		});
 		comment.save(function(err){
@@ -186,6 +222,7 @@ module.exports = function(app) {
 		});
 		
 	});
+	
 	
 	app.get('/edit/:name/:day/:title',checkLogin);
 	app.get('/edit/:name/:day/:title',function(req,res){
