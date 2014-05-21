@@ -83,7 +83,7 @@ module.exports = function(app) {
 		req.flash('success','file upload success');
 		res.redirect('/upload');
 	});
-	
+	app.get('/u/:name',checkLogin);
 	app.get('/u/:name',function(req,res){
 		User.get(req.params.name,function(err,user){
 			if(!user){
@@ -108,6 +108,11 @@ module.exports = function(app) {
 		});
 	});
 	
+	app.post('/u/:name',function(req,res){
+		console.log('req.body',req.body);
+		console.log('req.files',req.files);
+		
+	});
 	app.get('/u/:name/:day/:title',function(req,res){
 		
 		User.get(req.params.name,function(err,user){
@@ -138,13 +143,15 @@ module.exports = function(app) {
 							}else{
 								item.time = '';
 							}
-							if(item.child.length){
+							if(item.child && item.child.length){
 								item.child = handle(item.child);
 							}
 						});
+						return arr;
 						
 					}
-					
+					comments = handle(comments);
+					/*
 					comments.forEach(function(item,index){
 						if(item.timeStamp){
 							date.setTime(item.timeStamp);
@@ -156,6 +163,7 @@ module.exports = function(app) {
 						}
 						
 					});
+					*/
 					res.render('user', {
 						title: user.name,
 
@@ -181,13 +189,15 @@ module.exports = function(app) {
 			content:req.body.content
 			
 		});
+		var url = '/u/'+req.params.name+'/'+req.params.day+'/'+req.params.title; 
 		comment.save(function(err){
 			if (err) {
 				req.flash('error', err); 
-				
+				return res.json({success:false,message:err.toString()});
 			} 
-			var url = '/u/'+req.params.name+'/'+req.params.day+'/'+req.params.title; 
-			res.redirect(url);
+			req.flash('error','comment success');
+			
+			res.json({success:true});
 		})
 	});
 	

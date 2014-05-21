@@ -1,16 +1,18 @@
 <% include /module/header %>
 <% include /module/navbar %>
 <div class="row">
-	<% if(doc){ %>
-	
+	<% if(docs){ %>
+	<% docs.forEach(function(item,index){ %>
 	<p class="page-header">
-	<%= doc.title %>
-  	作者：<a href="/u/<%= doc.name %>"><%= doc.name %></a> | 
- 	 日期：<%= doc.time.minute %>
+	<%= item.title %>
+ 	 日期：<%= item.time.minute %>
 	</p>
-	<p><%- doc.post %></p>
-	
+	<% }) %>
 	<% } %>
 </div>
-<% include comment %>
+<form method="post" enctype="multipart/form-data">
+	<input type="file" name="photo">
+	<button type="submit">submit</button>
+</form>
+
 <% include /module/footer %>

@@ -7,7 +7,7 @@
 		<% docs.forEach(function(item,index){ %>
 		<div class="col-md-4">
             <h2><%-item.title %></h2><small><%-item.name %></small>
-            <p><%-item.post %></p>
+            <p><%-item.post.slice(0,100) %></p>
             <p><span><%=item.time.minute %></span>
             <a class="btn btn-default" href="<%='/u/'+item.name+'/' + item.time.day + '/'+item.title %>" role="button">View details »</a></p>
 		</div>

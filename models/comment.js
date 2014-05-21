@@ -67,6 +67,7 @@ Comment.prototype.save = function(callback){
 		});
 	});
 };
+
 Comment.getAll = function(blogID,callback){
 	mongodb.open(function(err,db){
 		if(err){
