@@ -1,18 +1,38 @@
 <% include /module/header %>
 <% include /module/navbar %>
-<div class="row">
-	<% if(docs){ %>
-	<% docs.forEach(function(item,index){ %>
-	<p class="page-header">
-	<%= item.title %>
- 	 日期：<%= item.time.minute %>
-	</p>
-	<% }) %>
-	<% } %>
+
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-4">
+			<div class="row">
+				<img src="..." alt="..." class="img-thumbnail" height=200>
+				<button class="btn btn-primary">修改</button>
+			</div>
+			
+			<p>签名</p>
+			<h4>
+				这是偶的第一个签名
+			</h4>
+			<button class="btn btn-primary">修改</button>
+			
+			<div>
+				
+			
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="pager-header">blog list</div>
+			<div class="list-group">
+			    <a href="#" class="list-group-item active">
+					<h4 class="list-group-item-heading">List group item heading</h4>
+					<p class="list-group-item-text">...</p>
+				</a>
+			</div>
+		
+		</div>
+	
+	</div>
 </div>
-<form method="post" enctype="multipart/form-data">
-	<input type="file" name="photo">
-	<button type="submit">submit</button>
-</form>
 
 <% include /module/footer %>

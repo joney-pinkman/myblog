@@ -3,12 +3,12 @@
 <% function test(arr){ %>
 	<ul class="media-list">
 		<% arr.forEach(function(item,index){ %>
-	 	<li class="media">
+	 	<li class="media" style="border: 1px solid #C9C9C9;">
 	    <a class="pull-left" href="#">
 	      <span><%=item.userName %></span>
 	      <span><%=item.time%></span>
 	    </a>
-	    <div class="media-body">
+	    <div class="media-body" >
 	      <span class="media-heading h4"><%=item.content %></span>
 	      <% if(item.userName != user.name){ %>
 		  <button class="btn btn-primary reply" type="button">reply</button>

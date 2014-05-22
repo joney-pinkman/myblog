@@ -1,0 +1,19 @@
+<% include /module/header %>
+<% include /module/navbar %>
+<div class="row">
+	<% if(doc){ %>
+	
+	<p class="page-header">
+	<%= doc.title %>
+ 	 日期：<%= doc.time.minute %>
+	</p>
+	<p class="h4"> <%-doc.post%> </p>
+	<% } %>
+</div>
+<% include comment %>
+<form method="post" enctype="multipart/form-data">
+	<input type="file" name="photo">
+	<button type="submit">submit</button>
+</form>
+
+<% include /module/footer %>

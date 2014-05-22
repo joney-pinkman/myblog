@@ -164,7 +164,7 @@ module.exports = function(app) {
 						
 					});
 					*/
-					res.render('user', {
+					res.render('blog', {
 						title: user.name,
 
 						doc:doc,
